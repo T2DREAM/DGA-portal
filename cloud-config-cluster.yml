@@ -137,11 +137,11 @@ output:
   all: '| tee -a /var/log/cloud-init-output.log'
 runcmd:
 # Manually install java
-- sudo -u ubuntu aws s3 cp --region=us-west-2 --recursive s3://t2depi-conf-prod/.aws ~ubuntu/.aws
+- sudo -u ubuntu aws s3 cp --region=us-west-2 --recursive s3://dga-java-install/jdk-8u211-linux-x64.tar.gz /home/ubuntu/jdk-8u211-linux-x64.tar.gz
 - sudo mkdir -p /usr/lib/jvm
 - sudo chmod 777 /usr/lib/jvm
-- sudo tar -xzvf /home/ubuntu/.aws/jdk-8u211-linux-x64.tar.gz --directory /usr/lib/jvm/
-- sudo -u ubuntu rm -r /home/ubuntu/.aws
+- sudo tar -xzvf /home/ubuntu/jdk-8u211-linux-x64.tar.gz --directory /usr/lib/jvm/
+- sudo -u ubuntu rm -r /home/ubuntu/jdk-8u211-linux-x64.tar.gz
 - sudo chmod 755 /usr/lib/jvm
 - sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.8.0_211/bin/java 100
 - sudo -u ubuntu mv /home/ubuntu/.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys2
@@ -305,24 +305,3 @@ write_files:
     -Dlog4j2.disable.jmx=true
     -Dlog4j.skipJansi=true
     -XX:+HeapDumpOnOutOfMemoryError
-- path: /etc/postgresql/9.3/main/custom.conf
-  content: |
-    hot_standby = on
-    max_standby_archive_delay = -1
-    wal_level = hot_standby
-    archive_mode = on
-    archive_timeout = 60
-    checkpoint_timeout = 1h
-- path: /etc/postgresql/9.3/main/demo.conf
-  content: |
-    archive_mode = off
-- path: /etc/postgresql/9.3/main/master.conf
-  content: |
-    archive_command = '/opt/wal-e/bin/envfile --config ~postgres/.aws/credentials --section default --upper -- /opt/wal-e/bin/wal-e --s3-prefix="$(cat /etc/postgresql/9.3/main/wale_s3_prefix)" wal-push "%%p"'
-- path: /etc/postgresql/9.3/main/recovery.conf
-  content: |
-    recovery_target_timeline = 'latest'
-    restore_command = '/opt/wal-e/bin/wal-e --aws-instance-profile --s3-prefix="$(cat /etc/postgresql/9.3/main/wale_s3_prefix)" wal-fetch "%%f" "%%p"'
-    standby_mode = on
-- path: /etc/postgresql/9.3/main/wale_s3_prefix
-  content: "%(WALE_S3_PREFIX)s"
