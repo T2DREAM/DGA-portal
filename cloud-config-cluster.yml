@@ -274,7 +274,7 @@ write_files:
     discovery.zen.minimum_master_nodes: 1
     discovery.type: ec2
     cloud.aws.region: us-west-2
-    discovery.ec2.groups: elasticsearch-https, ssh-http-https
+    discovery.ec2.groups: ES, ssh-http-https
     indices.query.bool.max_clause_count: 8192
 - path: /etc/elasticsearch/cluster.sh
   content: |

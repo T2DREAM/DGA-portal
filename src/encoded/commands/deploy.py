@@ -327,7 +327,7 @@ def _get_run_args(main_args, instances_tag_data):
             print("Cluster must have a name")
             sys.exit(1)
         count = int(main_args.cluster_size)
-        security_groups = ['elasticsearch-https']
+        security_groups = ['ES']
         #iam_role = 'elasticsearch-instance'
         config_file = ':cloud-config-elasticsearch.yml'
         data_insert = {
