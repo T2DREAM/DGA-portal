@@ -235,11 +235,11 @@ def get_user_data(commit, config_file, data_insert, main_args):
     auth_type = 'prod'
     if main_args.profile_name != 'production':
         auth_type = 'demo'
-    #auth_keys_dir = '{auth_base}/{auth_type}-authorized_keys'.format(
-    #    auth_base=auth_base,
-    #    auth_type=auth_type,
-    #)
-    data_insert['S3_AUTH_KEYS'] = auth_base
+    auth_keys_dir = '{auth_base}/{auth_type}-authorized_keys'.format(
+        auth_base=auth_base,
+        auth_type=auth_type,
+    )
+    data_insert['S3_AUTH_KEYS'] = auth_keys_dir
     data_insert['REDIS_PORT'] = main_args.redis_port
     user_data = config_template % data_insert
     return user_data
