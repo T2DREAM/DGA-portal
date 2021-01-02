@@ -298,7 +298,7 @@ def _get_run_args(main_args, instances_tag_data):
     master_user_data = None
     if not main_args.elasticsearch == 'yes':
         security_groups = ['ssh-http-https']
-        #iam_role = 'encoded-instance'
+        iam_role = 'encoded-instance'
         count = 1
         data_insert = {
             'WALE_S3_PREFIX': main_args.wale_s3_prefix,
@@ -328,7 +328,7 @@ def _get_run_args(main_args, instances_tag_data):
             sys.exit(1)
         count = int(main_args.cluster_size)
         security_groups = ['ES']
-        #iam_role = 'elasticsearch-instance'
+        iam_role = 'elasticsearch-instance'
         config_file = ':cloud-config-elasticsearch.yml'
         data_insert = {
             'CLUSTER_NAME': main_args.cluster_name,
@@ -357,7 +357,7 @@ def _get_run_args(main_args, instances_tag_data):
             )
     run_args = {
         'count': count,
-        # 'iam_role': iam_role,
+        'iam_role': iam_role,
         'user_data': user_data,
         'security_groups': security_groups,
     }
@@ -463,7 +463,7 @@ def main():
         print("security_groups: %s" % run_args['security_groups'])
         bdm = _get_bdm(main_args)
         instances = spot_client.request_spot_instance(
-            # run_args['iam_role'],
+            run_args['iam_role'],
             main_args.spot_price,
             run_args['user_data'],
             bdm,
@@ -482,9 +482,9 @@ def main():
             UserData=run_args['user_data'],
             BlockDeviceMappings=bdm,
             InstanceInitiatedShutdownBehavior='terminate',
-            # IamInstanceProfile={
-            #    "Name": run_args['iam_role'],
-            #},
+            IamInstanceProfile={
+                "Arn": "arn:aws:iam::116837888204:instance-profile/encoded-instance",
+            },
             Placement={
                 'AvailabilityZone': main_args.availability_zone,
             },
