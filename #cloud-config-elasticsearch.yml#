@@ -58,7 +58,6 @@ output:
   all: '| tee -a /var/log/cloud-init-output.log'
 runcmd:
 # Manually install java
-- sudo -u ubuntu aws s3 cp --region=us-west-2 --recursive s3://t2depi-conf-prod/.aws ~ubuntu/.aws
 - sudo -u ubuntu wget https://dga-java-install.s3-us-west-2.amazonaws.com/jdk-8u211-linux-x64.tar.gz -P /home/ubuntu/
 - sudo mkdir -p /usr/lib/jvm
 - sudo chmod 777 /usr/lib/jvm
